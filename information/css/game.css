@@ -1,0 +1,1021 @@
+:root {
+  --primary: #8b3a44;
+  --primary-glow: rgba(139, 58, 68, 0.45);
+  --primary-dark: #4a1e24;
+  --bg-primary: #0a0708;
+  --bg-secondary: #140e10;
+  --surface-glass: rgba(20, 14, 16, 0.82);
+  --text-primary: #f7f1f2;
+  --text-secondary: #b8a8a9;
+  --accent: #d15b6a;
+  --accent-hover: #e86f7f;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(209, 91, 106, 0.35);
+  --shadow-elevation: 0 16px 40px rgba(0, 0, 0, 0.65);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL DE JUEGOS
+   ========================================================= */
+#game-content {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 9000; display: flex; flex-direction: column;
+  background: radial-gradient(circle at 50% 0%, var(--primary-glow), transparent 55%),
+              linear-gradient(180deg, var(--bg-primary), var(--bg-secondary));
+  color: var(--text-primary);
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+  overflow: hidden;
+}
+
+#game-content.is-open {
+  opacity: 1; visibility: visible; transform: translateY(0);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0s;
+}
+
+/* Header del selector */
+.game-header {
+  flex-shrink: 0; display: flex; flex-wrap: wrap;
+  align-items: center; justify-content: space-between;
+  padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  background: rgba(10, 7, 8, 0.7); border-bottom: 1px solid var(--border-subtle);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+
+.game-header .controls { display: flex; align-items: center; min-width: 0; }
+.game-header h1 { margin: 0 0 0 12px; font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+
+#close-game-container {
+  display: inline-flex; align-items: center; padding: 8px 12px;
+  background: var(--surface-glass); border: 1px solid var(--border-subtle);
+  border-radius: 10px; color: var(--text-primary); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition-smooth);
+}
+#close-game-container span { margin-left: 6px; }
+
+.game-header .information { display: flex; align-items: center; margin-left: auto; }
+.game-header .information button {
+  padding: 8px 14px; margin-left: 8px; background: transparent;
+  border: 1px solid var(--border-subtle); border-radius: 10px;
+  color: var(--text-secondary); font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition-smooth);
+}
+
+/* =========================================================
+   PANEL DE INFORMACIÓN FLOTANTE
+   ========================================================= */
+#view-info {
+  position: absolute; top: 60px; right: 16px; z-index: 50;
+  min-width: 220px; padding: 16px; background: var(--surface-glass);
+  border: 1px solid var(--border-subtle); border-radius: 16px;
+  box-shadow: var(--shadow-elevation);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  opacity: 0; visibility: hidden; transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+#view-info.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
+#view-info .content { display: flex; flex-direction: column; gap: 12px; }
+#view-info .row-information { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+#view-info .row-information:last-child { padding-bottom: 0; border-bottom: none; }
+#view-info .row-information h2 { margin: 0; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; }
+#view-info .row-information p { margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+
+/* =========================================================
+   CARRUSEL DE JUEGOS
+   ========================================================= */
+.container-games {
+  flex: 1 1 0; min-height: 0; min-width: 0;
+  display: flex; flex-direction: column; position: relative;
+  overflow: hidden; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+.games-carousel {
+  flex: 1 1 0; display: flex; flex-direction: row; align-items: stretch;
+  width: 100%; height: 0; min-width: 0; min-height: 0;
+  overflow: visible; position: relative;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform;
+}
+
+.game-slide {
+  flex: 0 0 100%; width: 100%; height: 100%; min-width: 100%; min-height: 0;
+  display: flex; flex-direction: column; position: relative;
+  padding: 0 4px; box-sizing: border-box; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* La vista horizontal/vertical conserva una tarjeta por página. */
+.games-carousel.is-column { flex-direction: column; }
+.games-carousel.is-column { height: 100%; width: 100%; }
+.games-carousel.is-column .game-slide {
+  flex: 0 0 100%; height: 100%; min-height: 100%; min-width: 0; width: 100%;
+}
+
+.heading-game {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 20px; /* Aumentado para separar del botón */
+  width: 100%;
+  padding-top: 16vh;
+}
+.heading-game .title-game { margin: 0 0 10px; font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+.heading-game .description-game {
+  margin: 0 auto; max-width: 480px; padding: 10px 15px; border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-subtle);
+  font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary);
+}
+
+.content-game { flex: 1 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; }
+.information-game-content { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
+
+.information-rewards {
+  position: relative; width: 100%; max-width: 420px; padding: 16px;
+  background: var(--surface-glass); border: 1px solid var(--border-subtle);
+  border-radius: 18px; box-shadow: var(--shadow-elevation);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+
+.help {
+  position: absolute; top: 10px; right: 10px; width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center; padding: 0;
+  background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-subtle);
+  border-radius: 50%; cursor: pointer;
+}
+.help .svg { width: 16px; height: 16px; display: block; }
+
+.rewards-grid { display: flex; justify-content: space-around; align-items: stretch; flex-wrap: wrap; padding-top: 8px; }
+.reward-item { flex: 1 1 30%; min-width: 90px; text-align: center; padding: 8px 4px; }
+.reward-item + .reward-item { border-left: 1px solid var(--border-subtle); }
+.title-reward { margin: 0 0 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); }
+.description-reward { margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+
+.button-games { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; width: 100%; max-width: 420px; }
+.button-games button {
+  flex: 1 1 0; min-width: 120px; margin: 4px; padding: 12px 18px;
+  border-radius: 12px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: 1px solid transparent;
+}
+.button-games .play-game,
+#play-game-secondary {
+  background: var(--primary);
+  color: var(--text-primary);
+  border-color: var(--primary);
+  margin: 0; /* IMPORTANTE: Quitar el margin: 0 16px que tenía antes */
+  width: 100%; /* Opcional: si quieres que ocupe todo el ancho en móvil */
+  max-width: 200px; /* Opcional: para que no sea gigante */
+}.button-games .continue {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.controls-container { position: relative; z-index: 2; flex: 0 0 auto; min-height: 42px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 12px 0; }
+#navigation-left, #navigation-right {
+  width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; background: var(--surface-glass); border: 1px solid var(--border-subtle);
+  border-radius: 50%; color: var(--text-primary); cursor: pointer;
+}
+#navigation-left:disabled, #navigation-right:disabled { opacity: 0.35; cursor: not-allowed; }
+#play-game-secondary { margin: 0 16px; padding: 11px 28px; background: var(--primary); border: none; border-radius: 12px; color: var(--text-primary); font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+
+.game-dots { position: relative; z-index: 2; flex: 0 0 auto; min-height: 22px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; padding: 8px 0 4px; }
+.game-dots .dot { width: 10px; height: 10px; margin: 0 5px; padding: 0; background: rgba(255, 255, 255, 0.18); border: none; border-radius: 50%; cursor: pointer; }
+.game-dots .dot.is-active { width: 26px; border-radius: 5px; background: var(--accent); }
+
+/* =========================================================
+   ARENA DEL JUEGO Y HUD SUPERIOR (#show-game)
+   ========================================================= */
+#show-game {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 100; background: var(--bg-primary);
+  display: flex; flex-direction: column;
+  transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#show-game.is-open { transform: translateX(0); }
+
+/* HUD Superior */
+.game-hud {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  background: var(--surface-glass); border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.hud-left { display: flex; align-items: center; gap: 12px; }
+#go-to-mainMenu {
+  padding: 8px 12px; background: var(--primary); color: #fff;
+  border: none; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
+}
+#title-game-content { margin: 0; font-size: 1rem; color: var(--text-primary); }
+.hud-right { display: flex; gap: 12px; font-size: 0.85rem; font-weight: bold; color: var(--accent); }
+.hud-stat span:first-child { color: var(--text-secondary); margin-right: 4px; }
+
+/* Arena (Juego en sí) */
+#arena {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px; position: relative; overflow: hidden;
+}
+
+.arena-action {
+  padding: 15px 30px; background: var(--primary); color: #fff; border: none; border-radius: 12px;
+  font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 8px 20px var(--primary-glow); transition: transform 0.1s;
+}
+.arena-action:active { transform: scale(0.95); }
+.arena-message { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+
+/* Información inferior */
+.show-information {
+  flex-shrink: 0; padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-glass); border-top: 1px solid var(--border-subtle); text-align: center;
+}
+.show-information h1 { margin: 0 0 4px; font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); }
+.show-information p { margin: 0; font-size: 0.9rem; color: var(--text-primary); }
+
+/* =========================================================
+   ANIMACIONES Y CUADRO DE CARGA
+   ========================================================= */
+.btn-anim { transition: transform 0.15s ease, filter 0.15s ease; -webkit-tap-highlight-color: transparent; }
+.btn-anim:active { transform: scale(0.92) !important; filter: brightness(0.8); }
+
+.loading-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 9999; background: rgba(10, 7, 8, 0.85);
+  display: flex; justify-content: center; align-items: center;
+  opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none;
+}
+.loading-overlay.is-active { opacity: 1; visibility: visible; pointer-events: all; }
+.loading-box {
+  width: 60px; height: 60px; background-color: #ffffff; border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); opacity: 0;
+}
+.anim-fade-spin-in { animation: spinIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.anim-fade-spin-out { animation: spinOut 0.6s cubic-bezier(0.8, 0, 0.8, 0.2) forwards; }
+
+@keyframes spinIn { 0% { opacity: 0; transform: scale(0.5) rotate(-180deg); } 100% { opacity: 1; transform: scale(1) rotate(0deg); } }
+@keyframes spinOut { 0% { opacity: 1; transform: scale(1) rotate(0deg); } 100% { opacity: 0; transform: scale(0.5) rotate(180deg); } }
+
+
+/* =========================================================
+   6. MINIJUEGO: RECOLECTOR DE FLORES (TOPOS)
+   ========================================================= */
+.mini-game-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 7, 8, 0.95);
+  z-index: 50;
+  padding: 20px;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.mini-game-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* HUD del minijuego */
+.mini-game-hud {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.mg-stat span { color: var(--accent); }
+
+/* Tablero (Grid 3x3) */
+.mg-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  width: 100%;
+  max-width: 350px;
+}
+
+/* El "Agujero" */
+.mg-hole {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1; /* Cuadrado perfecto */
+  background: #140e10;
+  border-radius: 50%;
+  box-shadow: inset 0 10px 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5);
+  overflow: hidden; /* Para que el personaje no se salga */
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.05);
+}
+
+/* El personaje (Flor o Gato) */
+.mg-character {
+  position: absolute;
+  bottom: -100%; /* Empieza escondido abajo */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  transition: bottom 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  user-select: none;
+}
+
+/* Cuando el personaje está activo */
+.mg-hole.active .mg-character {
+  bottom: 10%;
+}
+
+/* Efecto al golpear */
+.mg-hole.hit .mg-character {
+  transform: translateX(-50%) scale(0.8);
+  opacity: 0.5;
+}
+
+/* Pantalla de Resultados */
+.mg-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-surface);
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  text-align: center;
+  box-shadow: var(--shadow-box);
+  z-index: 100;
+  width: 90%;
+  max-width: 300px;
+}
+
+.mg-result.hidden { display: none; }
+.mg-result h2 { margin-top: 0; color: var(--accent); }
+.mg-result p { margin-bottom: 20px; color: var(--text-muted); }
+
+/* =========================================================
+   6. MINIJUEGO: RECOLECTOR DE FLORES (TOPOS)
+   ========================================================= */
+
+.mini-game-container {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10, 7, 8, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.mini-game-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mini-game-hud {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 20px;
+  padding: 12px 18px;
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.mg-stat span { color: var(--accent); }
+
+.mg-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  width: 100%;
+  max-width: 350px;
+}
+
+.mg-hole {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background: #140e10;
+  border-radius: 50%;
+  box-shadow: inset 0 10px 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5);
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.05);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mg-character {
+  position: absolute;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  transition: bottom 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  user-select: none;
+}
+
+.mg-hole.active .mg-character {
+  bottom: 10%;
+}
+
+.mg-hole.hit .mg-character {
+  transform: translateX(-50%) scale(0.8);
+  opacity: 0.5;
+}
+
+.mg-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-secondary);
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+  box-shadow: var(--shadow-elevation);
+  z-index: 100;
+  width: 90%;
+  max-width: 320px;
+}
+
+.mg-result.hidden { display: none; }
+.mg-result h2 { margin-top: 0; color: var(--accent); }
+.mg-result p { margin-bottom: 25px; color: var(--text-secondary); font-size: 0.95rem; }
+
+.mg-result-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.mg-result-buttons button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s;
+}
+
+.mg-result-buttons button:active { transform: scale(0.95); }
+
+#mg-restart {
+  background: var(--primary);
+  color: white;
+}
+
+#mg-exit {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle) !important;
+}
+
+/* =========================================================
+   7. SISTEMA DE NOTIFICACIONES (TOASTS)
+   ========================================================= */
+
+.toast-container {
+  position: fixed;
+  top: 20px; /* Aparecen arriba */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000; /* Por encima de todo, incluso del minijuego */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none; /* Para que no bloqueen clics si están vacíos */
+  width: 90%;
+  max-width: 400px;
+}
+
+.toast {
+  background: var(--surface-glass, rgba(20, 14, 16, 0.95));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  border-left: 4px solid var(--accent, #d15b6a); /* Detalle de color a la izquierda */
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary, #f7f1f2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto; /* Reactivar clics para los botones */
+
+  /* Animación inicial */
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.hiding {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.toast-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toast-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent, #d15b6a);
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary, #b8a8a9);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.toast-message {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-secondary, #b8a8a9);
+}
+
+.toast-action {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 8px 16px;
+  background: var(--primary, #8b3a44);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toast-action:hover {
+  background: var(--primary-hover, #a34450);
+}
+
+/* Animación para el icono de la campana o carta (opcional) */
+@keyframes pulseNotification {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* =========================================================
+   8. MENÚ DE CARTAS
+   ========================================================= */
+
+.letters-content {
+  position: fixed;
+  inset: 0;
+  z-index: 9500; /* Un poco menos que el minijuego, pero más que el fondo */
+  background: rgba(0, 0, 0, .2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
+
+.letters-content.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.letters-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 30px 20px;
+  overflow-y: auto;
+  align-content: start;
+}
+
+/* Estilo base de cada carta */
+.letter-card {
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow-elevation);
+  backdrop-filter: blur(12px);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.letter-card .letter-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.letter-card h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.letter-card .letter-desc {
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  flex-grow: 1; /* Empuja el botón hacia abajo */
+}
+
+/* Botones dentro de las cartas */
+.letter-card button {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+}
+
+.read-letter-btn {
+  background: var(--primary);
+  color: white;
+}
+.read-letter-btn:hover { background: var(--primary-hover); }
+
+.buy-letter-btn {
+  background: var(--accent);
+  color: white;
+}
+.buy-letter-btn:hover { background: var(--accent-hover); }
+
+/* --- ESTADOS DE LAS CARTAS --- */
+
+/* Carta Desbloqueada */
+.letter-card.unlocked {
+  border-color: var(--primary);
+  box-shadow: 0 0 20px rgba(139, 58, 68, 0.2);
+}
+
+/* Carta Bloqueada */
+.letter-card.locked {
+  opacity: 0.6;
+  filter: grayscale(0.8);
+}
+.letter-card.locked .letter-icon {
+  opacity: 0.5;
+}
+
+/* =========================================================
+   9. MODAL PARA LEER CARTAS
+   ========================================================= */
+
+.letter-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000; /* Por encima de todo */
+  background: rgba(10, 7, 8, 0.85); /* Fondo oscuro semitransparente */
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  /* Animación de entrada */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.letter-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.letter-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+
+  /* Animación de escala */
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.letter-modal.is-open .letter-modal-content {
+  transform: scale(1) translateY(0);
+}
+
+/* Botón de cerrar (la X) */
+.close-modal-btn {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.close-modal-btn:hover {
+  transform: scale(1.1) rotate(90deg);
+  background: var(--primary-hover);
+}
+
+/* El "Papel" de la carta */
+.letter-paper {
+  background: #fdf5e6; /* Color pergamino suave */
+  color: #333; /* Texto oscuro para leer bien */
+  padding: 40px 30px;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 50px rgba(0,0,0,0.05);
+  font-family: 'Georgia', serif; /* Tipografía clásica */
+  line-height: 1.6;
+}
+
+.modal-letter-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
+  color: var(--primary-dark);
+  border-bottom: 2px solid rgba(139, 58, 68, 0.2);
+  padding-bottom: 15px;
+}
+
+.modal-letter-text p {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  text-align: justify;
+}
+
+.letter-signature {
+  margin-top: 30px;
+  text-align: right;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* =========================================================
+   10. TIENDA DE CARTAS
+   ========================================================= */
+
+.shop-balance {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-surface);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  font-size: 0.9rem;
+}
+
+.shop-balance span {
+  color: var(--text-muted);
+}
+
+.shop-balance strong {
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+/* Estilo para cuando la carta ya está comprada en la tienda */
+.letter-card.owned .buy-letter-btn {
+  background: transparent;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.letter-card.owned .buy-letter-btn:hover {
+  transform: none; /* Quitar efecto hover si ya está comprada */
+}
+
+/* =========================================================
+   11. IFRAME MODAL Y MÚSICA
+   ========================================================= */
+
+.iframe-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(10, 7, 8, 0.9);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.iframe-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.iframe-content {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 80vh;
+  background: var(--bg-surface);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-elevation);
+  border: 1px solid var(--border-light);
+
+  /* Animación de escala */
+  transform: scale(0.9) translateY(30px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.iframe-modal.is-open .iframe-content {
+  transform: scale(1) translateY(0);
+}
+
+#modal-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Botón flotante para la música */
+.music-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9000;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: 2px solid var(--border-light);
+  box-shadow: 0 4px 15px var(--primary-glow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.music-toggle:hover {
+  transform: scale(1.1);
+  background: var(--primary-hover);
+}
+
+.music-toggle.paused {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+/* =========================================================
+   13. MEJORAS UX/UI Y DETALLES ROMÁNTICOS
+   ========================================================= */
+
+/* Transición suave para abrir menús (Deslizar desde abajo) */
+.mode-menu, .letters-content, .shop-content, #game-content {
+  transform: translateY(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.4s;
+}
+
+.mode-menu.is-open, .letters-content.is-open, .shop-content.is-open, #game-content.is-open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Animación de "Carta Volando" al desbloquear */
+@keyframes flyToLetter {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.5) translate(50px, -100px) rotate(20deg); opacity: 0.8; }
+  100% { transform: scale(0) translate(200px, -300px) rotate(45deg); opacity: 0; }
+}
+
+.letter-flying {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 4rem;
+  z-index: 10000;
+  pointer-events: none;
+  animation: flyToLetter 1s ease-out forwards;
+}
+
+/* Efecto de destello en la pantalla al ganar */
+.flash-effect {
+  position: fixed;
+  inset: 0;
+  background: white;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  animation: flash 0.5s ease-out;
+}
+
+@keyframes flash {
+  0% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+/* Pequeña animación en los botones de la tienda */
+.buy-letter-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.buy-letter-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: all 0.5s;
+}
+
+.buy-letter-btn:hover::after {
+  left: 100%;
+}
+
+/* Frase romántica sutil al fondo */
+.romantic-footer {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  pointer-events: none;
+  text-align: center;
+  width: 90%;
+  opacity: 0.7;
+  transition: opacity 0.5s;
+}
+/* ^^^ Asegúrate de cerrar la llave aquí */
