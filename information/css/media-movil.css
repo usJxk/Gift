@@ -1,0 +1,85 @@
+
+@media (max-width: 600px) {
+  /* Ajustes del Header Principal */
+  .app-header .buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .app-header .buttons button {
+    flex: 1 1 45%; /* 2 botones por fila */
+  }
+
+  /* Ajustes del HUD del juego */
+  .game-hud {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+  }
+  .hud-right {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 0.8rem;
+  }
+
+  /* Ajustes de las tarjetas de juego */
+  .game-slide {
+    padding: 0 10px;
+  }
+  .heading-game .title-game {
+    font-size: 1.1rem;
+  }
+  .heading-game .description-game {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
+
+  /* Ajustes de los botones de Jugar/Continuar */
+  .button-games {
+    flex-direction: column; /* Apilados en móvil */
+    gap: 10px;
+    width: 100%;
+  }
+  .button-games button {
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  /* Ajustes del carrusel */
+  .controls-container {
+    padding: 10px 0;
+  }
+  #play-game-secondary {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+
+  /* Ajustes de la Arena del Juego */
+  #arena {
+    padding: 10px;
+  }
+  
+  /* Ajustes del modal de la carta */
+  .letter-paper {
+    padding: 25px 20px;
+  }
+  .modal-letter-title {
+    font-size: 1.2rem;
+  }
+  .modal-letter-text p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .app-header .title {
+    font-size: 1.2rem;
+  }
+  .hud-right {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+}
