@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0708" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Feliz cumpleaños ʕ•ᴥ•ʔ</title>
+  <link rel="stylesheet" href="information/css/index.css" />
+  <link rel="stylesheet" href="information/css/game.css" />
+  <link rel="stylesheet" type="text/css" href="information/css/media-movil.css">
+  <link rel="stylesheet" href="information/css/animation.css">
+  <link rel="stylesheet" href="information/css/media-movil.css">
+</head>
+
+<body>
+  <div id="loading-overlay" class="loading-overlay" aria-hidden="true"></div>
+  <div class="background-overlay" aria-hidden="true"></div>
+
+    <!-- Reproductor de Música de Fondo -->
+  <audio id="bg-music" loop>
+    <source src="information/src/sounds/background-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Modal para los iframes -->
+  <div id="iframe-modal" class="iframe-modal" aria-hidden="true">
+    <div class="iframe-content">
+      <button id="close-iframe" class="close-modal-btn">&times;</button>
+      <iframe id="modal-iframe" src="" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <video
+    class="bg-video"
+    src="information/src/video/background.mp4"
+    autoplay loop muted playsinline webkit-playsinline
+    aria-hidden="true"
+  ></video>
+
+  <!-- ===================== CONTENIDO PRINCIPAL ===================== -->
+  <main class="content-principal">
+    <header class="app-header">
+      <div class="title-container">
+        <h1 class="title">Feliz Cumpleaños</h1>
+      </div>
+      <nav class="buttons" aria-label="Navegación principal">
+        <button id="activity-1" class="btn-anim" type="button">Juegos</button>
+        <button id="activity-2" class="btn-anim" type="button">Cartas</button>
+        <button id="activity-3" class="btn-anim" type="button">Tienda</button>
+        <button id="options" type="button">Configuración</button>
+      </nav>
+    </header>
+
+      <!-- ===================== CONTENEDOR DE CARTAS (OVERLAY) ===================== -->
+  <main id="letters-content" class="letters-content" aria-hidden="true">
+    <header class="game-header">
+      <div class="controls">
+        <button id="close-letters" type="button" class="btn-anim">
+          <svg class="close-icon" viewBox="0 0 24 24" width="16" height="16"
+               stroke="currentColor" stroke-width="2.5" fill="none"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span>Cerrar</span>
+        </button>
+        <h1>Cartas de Jack</h1>
+      </div>
+    </header>
+
+    <div class="letters-grid">
+      <!-- CARTA 1 -->
+      <article class="letter-card unlocked" id="letter-1">
+        <div class="letter-icon">✉️</div>
+        <h2>Un nuevo comienzo</h2>
+        <p class="letter-desc">Jack te agradece por las flores.</p>
+        <button class="read-letter-btn" onclick="alert('¡Aquí va el texto de la carta 1!')">Leer Carta</button>
+      </article>
+
+      <!-- CARTA 2 -->
+      <article class="letter-card locked" id="letter-2">
+        <div class="letter-icon">🔒</div>
+        <h2>El secreto del bosque</h2>
+        <p class="letter-desc">Completa otro juego para desbloquear.</p>
+        <button class="buy-letter-btn" onclick="alert('¡Próximamente tienda!')">Comprar</button>
+      </article>
+
+      <!-- CARTA 3 -->
+      <article class="letter-card locked" id="letter-3">
+        <div class="letter-icon">🔒</div>
+        <h2>La última promesa</h2>
+        <p class="letter-desc">Completa otro juego para desbloquear.</p>
+        <button class="buy-letter-btn" onclick="alert('¡Próximamente tienda!')">Comprar</button>
+      </article>
+    </div>
+  </main>
+
+    <section class="card">
+      <article class="header-card">
+        <div class="content-header-card">
+          <div class="user-profile">
+            <img
+              src="information/src/images/marilyin.jpg"
+              alt="Foto de perfil de Mariangel"
+              class="profile-pic"
+              loading="lazy" decoding="async"
+            />
+            <h2>Mariangel</h2>
+          </div>
+          <div class="countdown-container">
+            <h3>Cumpleaños</h3>
+            <p id="birthday">00:00:00:00</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="spotify-card">
+        <div class="spotify-aside">
+          <button id="open-spotify" type="button">
+            <img src="information/src/icons/spotify.png" alt="" class="spotify" loading="lazy" />
+            <span>Open Spotify</span>
+          </button>
+          <a href="https://open.spotify.com/playlist/447fcIqoezMJ00yTHBcaEO"
+             target="_blank" rel="noopener noreferrer">
+            <img src="information/src/icons/spotify.png" alt="" class="spotify" loading="lazy" />
+            <span>Conseguir</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="description-card">
+        <div class="games-information">
+          <div class="info-box">
+            <h3>Juegos completados</h3>
+            <p id="game-complete">0</p>
+          </div>
+          <div class="info-box">
+            <h3>Tiempo pasado</h3>
+            <p id="timelapse">00:00:00</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ===================== MENÚ DE CONFIGURACIÓN ===================== -->
+    <section id="mode-menu" aria-hidden="true">
+      <article class="header-mode-menu">
+        <h1>Configuración</h1>
+        <button id="close-menu" type="button">Cerrar</button>
+      </article>
+
+      <article class="content-mode-menu">
+        <div class="option">
+          <div>
+            <h4>Volumen</h4>
+            <input type="range" name="musicrange" id="musicrange" min="0" max="100" />
+          </div>
+          <div>
+            <h4>Poner otra playlist</h4>
+            <input type="url" name="urlmusic" id="urlmusic" inputmode="url" />
+          </div>
+        </div>
+
+        <div class="option">
+          <article class="font-size-setting">
+            <h4>Tamaño del texto</h4>
+            <p class="setting-description">Ajusta el tamaño de la fuente de toda la página</p>
+            <div class="range-container">
+              <input type="range" id="font-size-range" name="font-size"
+                     min="12" max="24" step="1" value="16" list="font-sizes" />
+              <datalist id="font-sizes">
+                <option value="12" label="12px"></option>
+                <option value="14" label="14px"></option>
+                <option value="15" label="15px"></option>
+                <option value="16" label="16px"></option>
+                <option value="18" label="18px"></option>
+                <option value="20" label="20px"></option>
+                <option value="24" label="24px"></option>
+              </datalist>
+            </div>
+          </article>
+        </div>
+
+        <div class="option theme-buttons">
+          <div><h4>Oscuro</h4><button id="dark-mode" type="button">Activar</button></div>
+          <div><h4>Noche</h4><button id="night-mode" type="button">Activar</button></div>
+          <div><h4>Claro</h4><button id="sun-mode" type="button">Activar</button></div>
+        </div>
+
+        <div class="option">
+          <div class="content-option-color">
+            <div><canvas id="set-color-menu"></canvas></div>
+            <div class="input-color">
+              <div class="input-wrapper">
+                <input type="text" id="set-color" placeholder="#8B3A44" aria-label="Color hexadecimal" />
+              </div>
+              <button id="add-color" type="button">Poner Color</button>
+            </div>
+          </div>
+          <div id="container-log-colors"></div>
+        </div>
+
+        <div class="option option-orientation">
+          <button id="row" type="button">Vertical</button>
+          <button id="column" type="button">Horizontal</button>
+        </div>
+
+        <div id="save-configuration">
+          <button id="save-configuration-btn" type="button">Guardar Cambios</button>
+          <button id="cancel-configuration" type="button">Cancelar Cambios</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- ===================== CONTENEDOR DE JUEGOS (OVERLAY) ===================== -->
+  <main id="game-content" aria-hidden="true">
+    <header class="game-header">
+      <div class="controls">
+        <button id="close-game-container" type="button">
+          <svg class="close-icon" viewBox="0 0 24 24" width="16" height="16"
+               stroke="currentColor" stroke-width="2.5" fill="none"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span>Cerrar</span>
+        </button>
+        <h1>Selector de Juegos</h1>
+      </div>
+      <div class="information">
+        <button id="open-info" type="button" aria-expanded="false">Abrir información</button>
+        <button id="games-info" type="button">Juegos</button>
+      </div>
+    </header>
+
+    <div id="view-info" aria-hidden="true">
+      <div class="content">
+        <div class="row-information">
+          <h2>Completados</h2>
+          <p id="games-complete">0</p>
+        </div>
+        <div class="row-information">
+          <h2>Cartas</h2>
+          <p id="letters-complete">0</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-games">
+      <div class="games-carousel" id="games-carousel">
+        <!-- ============ JUEGO 1 ============ -->
+        <section class="game-slide" id="card-game-1" data-index="0" aria-label="Juego 1">
+          <div class="heading-game">
+            <h2 class="title-game">Recolector de bienes y raíces</h2>
+            <p class="description-game">
+              Recolecta las monedas y dáselas a Jack para que pueda comprar
+              unas flores para dárselas a Amy
+            </p>
+          </div>
+
+          <div class="content-game">
+            <div class="information-game-content">
+              <div class="information-rewards">
+                <button class="help" type="button" aria-label="Ayuda">
+                  <img src="information/src/icons/help.svg" alt="" class="svg" loading="lazy" />
+                </button>
+                <div class="rewards-grid">
+                  <div class="reward-item">
+                    <h3 class="title-reward">Stars</h3>
+                    <p class="description-reward" id="stars-count-1">0</p>
+                  </div>
+                  <div class="reward-item">
+                    <h3 class="title-reward">Coins</h3>
+                    <p class="description-reward" id="coins-count-1">0</p>
+                  </div>
+                  <div class="reward-item">
+                    <h3 class="title-reward">Life</h3>
+                    <p class="description-reward" id="life-count-1">3</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="button-games">
+              <button class="play-game" id="play-game-1" type="button">Jugar</button>
+              <button class="continue" type="button">Continuar</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ JUEGO 2 ============ -->
+        <section class="game-slide" id="card-game-2" data-index="1" aria-label="Juego 2">
+          <div class="heading-game">
+            <h2 class="title-game">Encuentra planetas</h2>
+            <p class="description-game">
+              Identifica los planetas para poder ver una luz inmensa
+              antes de que estalles
+            </p>
+          </div>
+
+          <div class="content-game">
+            <div class="information-game-content">
+              <div class="information-rewards">
+                <button class="help" type="button" aria-label="Ayuda">
+                  <img src="information/src/icons/help.svg" alt="" class="svg" loading="lazy" />
+                </button>
+                <div class="rewards-grid">
+                  <div class="reward-item">
+                    <h3 class="title-reward">Stars</h3>
+                    <p class="description-reward" id="stars-count-2">0</p>
+                  </div>
+                  <div class="reward-item">
+                    <h3 class="title-reward">Coins</h3>
+                    <p class="description-reward" id="coins-count-2">0</p>
+                  </div>
+                  <div class="reward-item">
+                    <h3 class="title-reward">Life</h3>
+                    <p class="description-reward" id="life-count-2">3</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="button-games">
+              <button class="play-game" type="button">Jugar</button>
+              <button class="continue" type="button">Continuar</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ JUEGO 3 ============ -->
+        <section class="game-slide" id="card-game-3" data-index="2" aria-label="Juego 3">
+          <div class="heading-game">
+            <h2 class="title-game">Casino e.e</h2>
+            <p class="description-game">Ten cuidado en donde juegas tus cartas</p>
+          </div>
+
+          <div class="content-game">
+            <div class="information-game-content">
+              <div class="information-rewards">
+                <button class="help" type="button" aria-label="Ayuda">
+                  <img src="information/src/icons/help.svg" alt="" class="svg" loading="lazy" />
+                </button>
+                <div class="rewards-grid">
+                  <div class="reward-item">
+                    <h3 class="title-reward">Stars</h3>
+                    <p class="description-reward" id="stars-count-3">0</p>
+                  </div>
+                  <div class="reward-item">
+                    <h3 class="title-reward">Coins</h3>
+                    <p class="description-reward" id="coins-count-3">0</p>
+                  </div>
+                  <div class="reward-item">
+                    <h3 class="title-reward">Life</h3>
+                    <p class="description-reward" id="life-count-3">3</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="button-games">
+              <button class="play-game" type="button">Jugar</button>
+              <button class="continue" type="button">Continuar</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="controls-container">
+        <button id="navigation-left" type="button" aria-label="Juego anterior">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="16" height="16"
+               stroke="currentColor" stroke-width="2.5" fill="none"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <button id="play-game-secondary" type="button">Jugar</button>
+
+        <button id="navigation-right" type="button" aria-label="Juego siguiente">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="16" height="16"
+               stroke="currentColor" stroke-width="2.5" fill="none"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <div class="game-dots" id="game-dots" role="tablist" aria-label="Seleccionar juego">
+        <button class="dot is-active" data-index="0" role="tab" aria-selected="true" aria-label="Juego 1"></button>
+        <button class="dot" data-index="1" role="tab" aria-selected="false" aria-label="Juego 2"></button>
+        <button class="dot" data-index="2" role="tab" aria-selected="false" aria-label="Juego 3"></button>
+      </div>
+    </div>
+
+    <!-- ============ OVERLAY DEL JUEGO ACTIVO ============ -->
+    <div id="show-game" aria-hidden="true">
+      <header class="game-hud">
+        <div class="hud-left">
+          <button id="go-to-mainMenu" class="btn-anim" type="button">Menú</button>
+          <h2 id="title-game-content">Title</h2>
+        </div>
+        <div class="hud-right">
+          <span class="hud-stat"><span>Stars:</span> <span id="hud-stars">0</span></span>
+          <span class="hud-stat"><span>Coins:</span> <span id="hud-coins">0</span></span>
+          <span class="hud-stat"><span>Life:</span> <span id="hud-life">3</span></span>
+        </div>
+      </header>
+
+      <section id="arena">
+        <button id="start-game-btn" class="arena-action btn-anim">¡Jugar!</button>
+      </section>
+
+      <footer class="show-information">
+        <p id="description-arena"></p>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ===================== MINIJUEGO: OVERLAY INDEPENDIENTE ===================== -->
+  <div id="mini-game-container" class="mini-game-container hidden">
+    <div class="mini-game-hud">
+      <div class="mg-stat">Flores: <span id="mg-score">0</span>/10</div>
+      <div class="mg-stat">Toques: <span id="mg-touches">0</span>/20</div>
+      <div class="mg-stat">Vidas: <span id="mg-lives">❤️❤️❤️</span></div>
+    </div>
+
+    <div class="mg-board">
+      <div class="mg-hole" data-index="0"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="1"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="2"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="3"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="4"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="5"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="6"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="7"><div class="mg-character"></div></div>
+      <div class="mg-hole" data-index="8"><div class="mg-character"></div></div>
+    </div>
+
+    <div id="mg-result" class="mg-result hidden">
+      <h2 id="mg-result-title">¡Ganaste!</h2>
+      <p id="mg-result-text">Has recolectado suficientes flores.</p>
+      <div class="mg-result-buttons">
+        <button id="mg-restart" class="btn-anim">Jugar de nuevo</button>
+        <button id="mg-exit" class="btn-anim continue">Salir</button>
+      </div>
+    </div>
+  </div>
+    <!-- ===================== MODAL PARA LEER CARTAS ===================== -->
+  <div id="letter-modal" class="letter-modal" aria-hidden="true">
+    <div class="letter-modal-content">
+      <button id="close-letter-modal" class="close-modal-btn" aria-label="Cerrar carta">&times;</button>
+
+      <!-- Aquí irá el texto dinámicamente -->
+      <div class="letter-paper">
+        <h2 id="modal-letter-title" class="modal-letter-title">Título de la carta</h2>
+        <div id="modal-letter-text" class="modal-letter-text">
+          <p>El texto de la carta aparecerá aquí...</p>
+        </div>
+        <p class="letter-signature">Con cariño,<br>Jack 🐾</p>
+      </div>
+
+    </div>
+  </div>
+    <!-- ===================== TIENDA DE CARTAS (OVERLAY) ===================== -->
+  <main id="shop-content" class="letters-content" aria-hidden="true">
+    <header class="game-header">
+      <div class="controls">
+        <button id="close-shop" type="button" class="btn-anim">
+          <svg class="close-icon" viewBox="0 0 24 24" width="16" height="16"
+               stroke="currentColor" stroke-width="2.5" fill="none"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span>Cerrar</span>
+        </button>
+        <h1>Tienda de Jack</h1>
+      </div>
+      <div class="shop-balance">
+        <span>Tus Monedas:</span>
+        <strong id="shop-coins-display">0 🪙</strong>
+      </div>
+    </header>
+
+    <div class="letters-grid">
+      <!-- CARTA 1 (No se compra, es regalo) -->
+      <article class="letter-card locked" id="shop-letter-1">
+        <div class="letter-icon">✉️</div>
+        <h2>Un nuevo comienzo</h2>
+        <p class="letter-desc">Esta carta es un regalo de bienvenida.</p>
+        <button class="buy-letter-btn" disabled style="opacity: 0.5; cursor: not-allowed;">Gratis</button>
+      </article>
+
+      <!-- CARTA 2 -->
+      <article class="letter-card locked" id="shop-letter-2">
+        <div class="letter-icon">🔒</div>
+        <h2>El secreto del bosque</h2>
+        <p class="letter-desc">Desbloquea esta carta especial.</p>
+        <button class="buy-letter-btn" data-price="50" data-id="2">Comprar (50 🪙)</button>
+      </article>
+
+      <!-- CARTA 3 -->
+      <article class="letter-card locked" id="shop-letter-3">
+        <div class="letter-icon">🔒</div>
+        <h2>La última promesa</h2>
+        <p class="letter-desc">La carta más codiciada de Jack.</p>
+        <button class="buy-letter-btn" data-price="100" data-id="3">Comprar (100 🪙)</button>
+      </article>
+    </div>
+  </main>
+
+    <!-- Reproductor de Música de Fondo -->
+  <audio id="bg-music" loop>
+    <source src="information/src/sounds/background-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Contenedor para el Iframe (Spotify/YouTube) -->
+  <div id="iframe-modal" class="iframe-modal" aria-hidden="true">
+    <div class="iframe-content">
+      <button id="close-iframe" class="close-modal-btn">&times;</button>
+      <!-- El src debe estar vacío aquí -->
+      <iframe id="modal-iframe" src="" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </div>  <!-- Contenedor de Notificaciones -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="information/backend/notifications.js" defer></script> <!-- NUEVO -->
+  <script src="information/backend/main.js" defer></script>
+  <script src="information/backend/games.js" defer></script>
+  <script src="information/backend/settings.js" defer></script>
+</body>
+</html>
