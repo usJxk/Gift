@@ -1,0 +1,51 @@
+/* =========================================================
+   light.css — Tema Claro (Día)
+   ========================================================= */
+body.theme-light {
+  --primary: #8b3a44;
+  --primary-glow: rgba(139, 58, 68, 0.2);
+  --primary-hover: #6e2d35;
+  
+  --bg-body: #f1f5f9; /* Gris muy claro */
+  --bg-surface: rgba(255, 255, 255, 0.95);
+  --bg-card: #ffffff;
+  
+  --text-main: #1e293b; /* Texto oscuro */
+  --text-muted: #64748b;
+  
+  --border-light: rgba(0, 0, 0, 0.1);
+  --shadow-box: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --accent: #d15b6a;
+  
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* Truco: Hacemos que el video de fondo se vea tenue y pongamos una capa blanca */
+body.theme-light .bg-video { opacity: 0.1; filter: invert(1); }
+body.theme-light .background-overlay { background: rgba(255, 255, 255, 0.6); }
+
+body.theme-light .mode-menu, 
+body.theme-light .game-content, 
+body.theme-light .letters-content, 
+body.theme-light #show-game,
+body.theme-light .app-header { background-color: var(--bg-body); }
+
+body.theme-light .card, 
+body.theme-light .information-rewards, 
+body.theme-light .letter-card, 
+body.theme-light .option,
+body.theme-light .game-hud,
+body.theme-light .show-information,
+body.theme-light .iframe-content { 
+  background: var(--bg-surface); 
+  border-color: var(--border-light);
+  color: var(--text-main);
+}
+
+/* Arreglos específicos para el tema claro */
+body.theme-light .title-game { color: #1e293b; }
+body.theme-light .game-header { border-bottom-color: rgba(0,0,0,0.1); }
+body.theme-light .game-header h1 { color: #1e293b; }
+body.theme-light #close-game-container { color: #1e293b; }
+body.theme-light .letter-paper { background: #fff; color: #333; } /* El papel de la carta */
