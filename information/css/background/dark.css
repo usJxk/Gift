@@ -1,0 +1,45 @@
+/* =========================================================
+   dark.css — Tema Oscuro (Original)
+   ========================================================= */
+:root {
+  --primary: #8b3a44;
+  --primary-glow: rgba(139, 58, 68, 0.45);
+  --primary-hover: #a34450;
+  
+  --bg-body: #0a0708;
+  --bg-surface: rgba(20, 14, 16, 0.85);
+  --bg-card: #140e10;
+  
+  --text-main: #f7f1f2;
+  --text-muted: #b8a8a9;
+  
+  --border-light: rgba(255, 255, 255, 0.1);
+  --shadow-box: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --accent: #d15b6a;
+}
+
+body.theme-dark {
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* Fondos */
+body.theme-dark .background-overlay { background: rgba(10, 7, 8, 0.5); }
+body.theme-dark .mode-menu, 
+body.theme-dark .game-content, 
+body.theme-dark .letters-content, 
+body.theme-dark #show-game,
+body.theme-dark .app-header { background-color: var(--bg-body); }
+
+/* Tarjetas */
+body.theme-dark .card, 
+body.theme-dark .information-rewards, 
+body.theme-dark .letter-card, 
+body.theme-dark .option,
+body.theme-dark .game-hud,
+body.theme-dark .show-information,
+body.theme-dark .iframe-content { 
+  background: var(--bg-surface); 
+  border-color: var(--border-light);
+  color: var(--text-main);
+}
